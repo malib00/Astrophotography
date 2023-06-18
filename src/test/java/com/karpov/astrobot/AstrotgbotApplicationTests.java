@@ -1,10 +1,10 @@
-package com.karpov.astrotgbot;
+package com.karpov.astrobot;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AstrotgbotApplicationTests {
+class AstroBotApplicationTests {
 
 	@Test
 	void contextLoads() {

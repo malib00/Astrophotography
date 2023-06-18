@@ -1,6 +1,6 @@
-package com.karpov.astrotgbot.handlers;
+package com.karpov.astrobot.handlers;
 
-import com.karpov.astrotgbot.services.EchoService;
+import com.karpov.astrobot.services.EchoService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;

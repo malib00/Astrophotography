@@ -1,13 +1,13 @@
-package com.karpov.astrotgbot;
+package com.karpov.astrobot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AstroTGBotApplication {
+public class AstroBotApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AstroTGBotApplication.class, args);
+		SpringApplication.run(AstroBotApplication.class, args);
 	}
 
 }

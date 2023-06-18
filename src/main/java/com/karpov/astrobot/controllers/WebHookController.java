@@ -1,6 +1,6 @@
-package com.karpov.astrotgbot.controllers;
+package com.karpov.astrobot.controllers;
 
-import com.karpov.astrotgbot.config.AstroTGBot;
+import com.karpov.astrobot.bot.AstroBot;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,14 +10,14 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @RestController
 public class WebHookController {
 
-	private final AstroTGBot astroTGBot;
+	private final AstroBot astroBot;
 
-	public WebHookController(AstroTGBot astroTGBot) {
-		this.astroTGBot = astroTGBot;
+	public WebHookController(AstroBot astroBot) {
+		this.astroBot = astroBot;
 	}
 
 	@PostMapping("/")
 	public BotApiMethod<?> onUpdateReceived(@RequestBody Update update) {
-		return astroTGBot.onWebhookUpdateReceived(update);
+		return astroBot.onWebhookUpdateReceived(update);
 	}
 }

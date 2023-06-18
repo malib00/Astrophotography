@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.karpov</groupId>
-	<artifactId>astrotgbot</artifactId>
+	<artifactId>astrobot</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>astrotgbot</name>
+	<name>astrobot</name>
 	<description>Astrophotography Helper Telegram Bot</description>
 
 	<properties>

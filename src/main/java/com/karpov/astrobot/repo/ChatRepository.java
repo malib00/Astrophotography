@@ -1,6 +1,6 @@
-package com.karpov.astrotgbot.repo;
+package com.karpov.astrobot.repo;
 
-import com.karpov.astrotgbot.models.Chat;
+import com.karpov.astrobot.models.Chat;
 import org.springframework.data.repository.CrudRepository;
 
 public interface ChatRepository extends CrudRepository<Chat, Long> {

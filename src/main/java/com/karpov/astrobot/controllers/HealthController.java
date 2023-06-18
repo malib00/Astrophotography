@@ -1,4 +1,4 @@
-package com.karpov.astrotgbot.controllers;
+package com.karpov.astrobot.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
