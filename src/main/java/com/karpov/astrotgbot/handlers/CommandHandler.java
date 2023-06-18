@@ -9,8 +9,12 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Component
 public class CommandHandler {
 
-	@Autowired
-	private RegisterChatService registerChatService;
+
+	private final RegisterChatService registerChatService;
+
+	public CommandHandler(RegisterChatService registerChatService) {
+		this.registerChatService = registerChatService;
+	}
 
 	public SendMessage handleCommand(Update update, String command) {
 		if (command.equals("/start")) {
