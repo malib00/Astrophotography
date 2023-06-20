@@ -1,14 +1,16 @@
 package com.karpov.astrobot.keyboards;
 
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class MainMenuKeyboard {
 
-	public static InlineKeyboardMarkup getMainMenuInlineKeyboard() {
+	public InlineKeyboardMarkup getMainMenuInlineKeyboard() {
 		InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 		List<List<InlineKeyboardButton>> rowsInLine = new ArrayList<>();
 

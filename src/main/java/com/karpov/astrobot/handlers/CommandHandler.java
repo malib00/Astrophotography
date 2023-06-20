@@ -10,9 +10,11 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class CommandHandler {
 
 	private final RegisterChatService registerChatService;
+	private final MainMenuKeyboard mainMenuKeyboard;
 
-	public CommandHandler(RegisterChatService registerChatService) {
+	public CommandHandler(RegisterChatService registerChatService, MainMenuKeyboard mainMenuKeyboard) {
 		this.registerChatService = registerChatService;
+		this.mainMenuKeyboard = mainMenuKeyboard;
 	}
 
 	public SendMessage handleCommand(Update update, String command) {
@@ -24,7 +26,7 @@ public class CommandHandler {
 					sendMessage.setText("Welcome");
 				}
 				sendMessage.setText("Menu");
-				sendMessage.setReplyMarkup(MainMenuKeyboard.getMainMenuInlineKeyboard());
+				sendMessage.setReplyMarkup(mainMenuKeyboard.getMainMenuInlineKeyboard());
 				return sendMessage;
 			case ("/help"):
 				return new SendMessage(update.getMessage().getChatId().toString(), "Some help text here... gonna be soon");
