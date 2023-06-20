@@ -19,20 +19,27 @@ public class MainUpdateHandler {
 	}
 
 	public BotApiMethod<?> handleUpdate(Update update) {
-		if (update.getMessage().hasEntities()) {
-			for (MessageEntity entity: update.getMessage().getEntities()
-			     ) {
-				if (entity.getType().equals("bot_command")) {
-					return commandHandler.handleCommand(update, entity.getText());
+		if (update.hasCallbackQuery()) {
+			//TODO
+			return new SendMessage(update.getCallbackQuery().getFrom().getId().toString(), "Update has query, but not implemented");
+		} else if (update.hasMessage()) {
+			if (update.getMessage().hasEntities()) {
+				SendMessage sendMessage = new SendMessage();
+				sendMessage.setChatId(update.getMessage().getChatId().toString());
+				sendMessage.setText("Got entities, but can't handle it ");
+				for (MessageEntity entity : update.getMessage().getEntities()
+				) {
+					if (entity.getType().equals("bot_command")) {
+						sendMessage = commandHandler.handleCommand(update, entity.getText());
+					}
 				}
+				return sendMessage;
+			} else {
+				return echoService.echoText(update);
 			}
-		}
-
-		if (update.getMessage().hasText()) {
-			return echoService.echoText(update);
-
 		} else {
 			return new SendMessage(update.getMessage().getChatId().toString(), "not recognized");
 		}
 	}
 }
+

@@ -1,5 +1,6 @@
 package com.karpov.astrobot.services;
 
+import com.karpov.astrobot.models.BotState;
 import com.karpov.astrobot.models.Chat;
 import com.karpov.astrobot.repo.ChatRepository;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class RegisterChatService {
 	public boolean registerChat(Update update) {
 		long id = update.getMessage().getChatId();
 		if (!chatRepository.existsById(id)) {
-			chatRepository.save(new Chat(id, Instant.now()));
+			chatRepository.save(new Chat(id, Instant.now(), BotState.MENU));
 			return true;
 		} else {
 			return false;
