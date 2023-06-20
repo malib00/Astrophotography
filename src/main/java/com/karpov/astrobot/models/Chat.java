@@ -1,6 +1,8 @@
 package com.karpov.astrobot.models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -24,5 +26,8 @@ public class Chat {
 	private long id;
 
 	private Instant timestamp;
+
+	@Enumerated(EnumType.STRING)
+	private BotState botState;
 
 }
