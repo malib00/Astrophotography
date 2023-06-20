@@ -17,13 +17,12 @@ public class RegisterChatService {
 		this.chatRepository = chatRepository;
 	}
 
-	public boolean registerChat(Update update) {
+	public void registerChatOrUpdateState(Update update) {
 		long id = update.getMessage().getChatId();
 		if (!chatRepository.existsById(id)) {
 			chatRepository.save(new Chat(id, Instant.now(), BotState.MENU));
-			return true;
 		} else {
-			return false;
+			chatRepository.updateBotStateById(id, BotState.MENU);
 		}
 	}
 }

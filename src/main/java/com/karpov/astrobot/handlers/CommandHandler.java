@@ -20,11 +20,9 @@ public class CommandHandler {
 	public SendMessage handleCommand(Update update, String command) {
 		switch (command) {
 			case ("/start"):
+				registerChatService.registerChatOrUpdateState(update);
 				SendMessage sendMessage = new SendMessage();
 				sendMessage.setChatId(update.getMessage().getChatId().toString());
-				if (registerChatService.registerChat(update)) {
-					sendMessage.setText("Welcome");
-				}
 				sendMessage.setText("Menu");
 				sendMessage.setReplyMarkup(mainMenuKeyboard.getMainMenuInlineKeyboard());
 				return sendMessage;
