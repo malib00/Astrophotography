@@ -44,20 +44,12 @@ public class SendPhotoService {
 	}
 
 	// set should be from 2 to 10
-	public HttpStatusCode sendPhotoGroupFromHTTP(String chatId, Set<String> set) {
+	public HttpStatusCode sendPhotoGroupFromHTTP(String chatId, Set<InputMediaPhoto> set) {
 		try {
-
-			Set<InputMediaPhoto> setInputMediaPhotoGroup = new HashSet<>();
-
-			for (String http : set) {
-				InputMediaPhoto inputMediaPhoto = new InputMediaPhoto();
-				inputMediaPhoto.setMedia(http);
-				setInputMediaPhotoGroup.add(inputMediaPhoto);
-			}
 
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.enable(SerializationFeature.INDENT_OUTPUT);
-			String json = mapper.writeValueAsString(setInputMediaPhotoGroup);
+			String json = mapper.writeValueAsString(set);
 
 			ResponseEntity<Message> responseEntity = restTemplate.getForEntity("https://api.telegram.org/bot{botToken}/sendMediaGroup?chat_id={chatId}&media={json}",
 					Message.class,
