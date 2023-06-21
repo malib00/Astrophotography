@@ -3,7 +3,6 @@ package com.karpov.astrobot.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.karpov.astrobot.bot.AstroBot;
 import com.karpov.astrobot.config.BotConfig;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,6 @@ import org.springframework.web.client.RestTemplate;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.media.InputMediaPhoto;
 
-import java.util.HashSet;
 import java.util.Set;
 
 //org.telegram.telegrambots for some reason doesn't have this methods
@@ -23,7 +21,7 @@ public class SendPhotoService {
 	private final RestTemplate restTemplate;
 	private final BotConfig botConfig;
 
-	public SendPhotoService(RestTemplate restTemplate, AstroBot astroBot, BotConfig botConfig) {
+	public SendPhotoService(RestTemplate restTemplate, BotConfig botConfig) {
 		this.restTemplate = restTemplate;
 		this.botConfig = botConfig;
 	}
