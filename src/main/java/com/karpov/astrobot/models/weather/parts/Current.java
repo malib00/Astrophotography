@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,17 +11,15 @@ import java.math.BigDecimal;
 public class Current {
 
 	private String last_updated;
-	private Integer last_updated_epoch;
-	private BigDecimal temp_c;
-	private BigDecimal temp_f;
+	private Float temp_c;
 	private Integer is_day;
-	private BigDecimal wind_kph;
+	private Float wind_kph;
 	private Integer wind_degree;
 	private String wind_dir;
 	private Integer precip_mm;
 	private Integer humidity;
 	private Integer cloud;
 	private Integer feelslike_c;
-	private BigDecimal gust_kph;
+	private Float gust_kph;
 
 }

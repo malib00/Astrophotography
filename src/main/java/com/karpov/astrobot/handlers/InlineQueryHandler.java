@@ -3,8 +3,12 @@ package com.karpov.astrobot.handlers;
 import com.karpov.astrobot.keyboards.InlineKeyboards.AuroraKeyboard;
 import com.karpov.astrobot.keyboards.InlineKeyboards.MainMenuKeyboard;
 import com.karpov.astrobot.keyboards.InlineKeyboards.SettingsKeyboard;
+import com.karpov.astrobot.keyboards.InlineKeyboards.WeatherKeyboard;
 import com.karpov.astrobot.keyboards.ReplyKeyboards.LocationReplyKeyboard;
+import com.karpov.astrobot.models.Chat;
+import com.karpov.astrobot.repo.ChatRepository;
 import com.karpov.astrobot.services.AuroraForecastService;
+import com.karpov.astrobot.services.WeatherForecastService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -24,13 +28,24 @@ public class InlineQueryHandler {
 	private final AuroraForecastService auroraForecast;
 	private final SettingsKeyboard settingsKeyboard;
 	private final LocationReplyKeyboard locationReplyKeyboard;
+	private final WeatherKeyboard weatherKeyboard;
+	private final WeatherForecastService weatherForecastService;
+	private final ChatRepository chatReposotory;
 
-	public InlineQueryHandler(AuroraKeyboard auroraKeyboard, MainMenuKeyboard mainMenuKeyboard, AuroraForecastService auroraForecast, SettingsKeyboard settingsKeyboard, LocationReplyKeyboard locationReplyKeyboard) {
+	public InlineQueryHandler(AuroraKeyboard auroraKeyboard,
+	                          MainMenuKeyboard mainMenuKeyboard,
+	                          AuroraForecastService auroraForecast,
+	                          SettingsKeyboard settingsKeyboard,
+	                          LocationReplyKeyboard locationReplyKeyboard,
+	                          WeatherKeyboard weatherKeyboard, WeatherForecastService weatherForecastService, ChatRepository chatReposotory) {
 		this.auroraKeyboard = auroraKeyboard;
 		this.mainMenuKeyboard = mainMenuKeyboard;
 		this.auroraForecast = auroraForecast;
 		this.settingsKeyboard = settingsKeyboard;
 		this.locationReplyKeyboard = locationReplyKeyboard;
+		this.weatherKeyboard = weatherKeyboard;
+		this.weatherForecastService = weatherForecastService;
+		this.chatReposotory = chatReposotory;
 	}
 
 	public BotApiMethod<?> handleInlineQuery(Update update) {
@@ -46,6 +61,21 @@ public class InlineQueryHandler {
 		switch (callbackQueryData) {
 			case ("ExitButton"):
 				return new DeleteMessage(callbackQuery.getFrom().getId().toString(), callbackQuery.getMessage().getMessageId());
+			case ("WeatherButton"):
+				editMessageText.setText("Astrophotography Helper\n\nWeather Forecast");
+				editMessageText.setReplyMarkup(weatherKeyboard.getWeatherInlineKeyboard());
+				return editMessageText;
+			case ("CurrentWeatherButton"):
+				Chat chat = chatReposotory.findById(callbackQuery.getMessage().getChatId()).get();
+				Double latitude = chat.getLatitude();
+				Double longitude = chat.getLongitude();
+				if (latitude!= null && longitude!=null) {
+					editMessageText.setText("Astrophotography Helper\n\n" + weatherForecastService.getCurrentWeatherText(latitude,longitude));
+				} else {
+					editMessageText.setText("Astrophotography Helper\n\nPlease set location in Settings");
+				}
+				editMessageText.setReplyMarkup(weatherKeyboard.getWeatherInlineKeyboard());
+				return editMessageText;
 			case ("AuroraButton"):
 				editMessageText.setText("Astrophotography Helper\n\nAurora forecast");
 				editMessageText.setReplyMarkup(auroraKeyboard.getAuroraInlineKeyboard());
