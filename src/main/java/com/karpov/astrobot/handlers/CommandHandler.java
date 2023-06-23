@@ -1,7 +1,7 @@
 package com.karpov.astrobot.handlers;
 
-import com.karpov.astrobot.keyboards.MainMenuKeyboard;
-import com.karpov.astrobot.keyboards.SettingsKeyboard;
+import com.karpov.astrobot.keyboards.InlineKeyboards.MainMenuKeyboard;
+import com.karpov.astrobot.keyboards.InlineKeyboards.SettingsKeyboard;
 import com.karpov.astrobot.services.RegisterChatService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
