@@ -30,4 +30,12 @@ public class Chat {
 	@Enumerated(EnumType.STRING)
 	private BotState botState;
 
+	private Double latitude;
+	private Double longitude;
+
+	public Chat(long id, Instant timestamp, BotState botState) {
+		this.id = id;
+		this.timestamp = timestamp;
+		this.botState = botState;
+	}
 }

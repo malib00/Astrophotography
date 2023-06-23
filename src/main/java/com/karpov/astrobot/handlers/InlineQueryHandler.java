@@ -1,10 +1,10 @@
 package com.karpov.astrobot.handlers;
 
-import com.karpov.astrobot.keyboards.AuroraKeyboard;
-import com.karpov.astrobot.keyboards.MainMenuKeyboard;
-import com.karpov.astrobot.keyboards.SettingsKeyboard;
+import com.karpov.astrobot.keyboards.InlineKeyboards.AuroraKeyboard;
+import com.karpov.astrobot.keyboards.InlineKeyboards.MainMenuKeyboard;
+import com.karpov.astrobot.keyboards.InlineKeyboards.SettingsKeyboard;
+import com.karpov.astrobot.keyboards.ReplyKeyboards.LocationReplyKeyboard;
 import com.karpov.astrobot.services.AuroraForecastService;
-import com.karpov.astrobot.services.SendPhotoService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -23,12 +23,14 @@ public class InlineQueryHandler {
 	private final MainMenuKeyboard mainMenuKeyboard;
 	private final AuroraForecastService auroraForecast;
 	private final SettingsKeyboard settingsKeyboard;
+	private final LocationReplyKeyboard locationReplyKeyboard;
 
-	public InlineQueryHandler(AuroraKeyboard auroraKeyboard, MainMenuKeyboard mainMenuKeyboard, AuroraForecastService auroraForecast, SettingsKeyboard settingsKeyboard) {
+	public InlineQueryHandler(AuroraKeyboard auroraKeyboard, MainMenuKeyboard mainMenuKeyboard, AuroraForecastService auroraForecast, SettingsKeyboard settingsKeyboard, LocationReplyKeyboard locationReplyKeyboard) {
 		this.auroraKeyboard = auroraKeyboard;
 		this.mainMenuKeyboard = mainMenuKeyboard;
 		this.auroraForecast = auroraForecast;
 		this.settingsKeyboard = settingsKeyboard;
+		this.locationReplyKeyboard = locationReplyKeyboard;
 	}
 
 	public BotApiMethod<?> handleInlineQuery(Update update) {
@@ -64,6 +66,10 @@ public class InlineQueryHandler {
 				editMessageText.setText("Astrophotography Helper\n\nSettings");
 				editMessageText.setReplyMarkup(settingsKeyboard.getSettingsInlineKeyboard());
 				return editMessageText;
+			case ("SetLocationButton"):
+				SendMessage sendMessage = new SendMessage(callbackQuery.getMessage().getChatId().toString(), "Set Location ... blabla (in decimals degrees");
+				sendMessage.setReplyMarkup(locationReplyKeyboard.getLocationReplyKeyboard());
+				return sendMessage;
 			default:
 				return new SendMessage(update.getCallbackQuery().getFrom().getId().toString(), "Update has query, but not implemented");
 		}
