@@ -14,16 +14,27 @@ import org.telegram.telegrambots.meta.api.objects.media.InputMediaPhoto;
 
 import java.util.Set;
 
-//org.telegram.telegrambots for some reason doesn't have this methods
 @Service
-public class SendPhotoService {
+public class CustomMessageService {
 
 	private final RestTemplate restTemplate;
 	private final BotConfig botConfig;
 
-	public SendPhotoService(RestTemplate restTemplate, BotConfig botConfig) {
+	public CustomMessageService(RestTemplate restTemplate, BotConfig botConfig) {
 		this.restTemplate = restTemplate;
 		this.botConfig = botConfig;
+	}
+
+	public void deleteMessage(Long chatId, Integer messageId) {
+		try {
+			ResponseEntity<Message> responseEntity = restTemplate.getForEntity("https://api.telegram.org/bot{botToken}/deleteMessage?chat_id={chatId}&message_id={messageId}",
+					Message.class,
+					botConfig.getBotToken(),
+					chatId,
+					messageId);
+		} catch (HttpClientErrorException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public HttpStatusCode sendPhotoFromHTTP(String chatId, String http) {

@@ -3,6 +3,7 @@ package com.karpov.astrobot.handlers;
 import com.karpov.astrobot.keyboards.InlineKeyboards.MainMenuKeyboard;
 import com.karpov.astrobot.keyboards.InlineKeyboards.SettingsKeyboard;
 import com.karpov.astrobot.models.Location;
+import com.karpov.astrobot.services.CustomMessageService;
 import com.karpov.astrobot.services.LocationService;
 import com.karpov.astrobot.services.RegisterChatService;
 import org.springframework.stereotype.Component;
@@ -20,17 +21,24 @@ public class CommandHandler {
 	private final MainMenuKeyboard mainMenuKeyboard;
 	private final SettingsKeyboard settingsKeyboard;
 	private final LocationService locationService;
+	private final CustomMessageService customMessageService;
 
-	public CommandHandler(RegisterChatService registerChatService, MainMenuKeyboard mainMenuKeyboard, SettingsKeyboard settingsKeyboard, LocationService locationService) {
+	public CommandHandler(RegisterChatService registerChatService,
+	                      MainMenuKeyboard mainMenuKeyboard,
+	                      SettingsKeyboard settingsKeyboard,
+	                      LocationService locationService,
+	                      CustomMessageService deleteMessageService) {
 		this.registerChatService = registerChatService;
 		this.mainMenuKeyboard = mainMenuKeyboard;
 		this.settingsKeyboard = settingsKeyboard;
 		this.locationService = locationService;
+		this.customMessageService = deleteMessageService;
 	}
 
 	public SendMessage handleCommand(Update update, String command) {
 		SendMessage sendMessage = new SendMessage();
 		Long chatId = update.getMessage().getChatId();
+		Integer receivedMessageId = update.getMessage().getMessageId();
 		sendMessage.setChatId(chatId);
 		MessageEntity messageEntity = new MessageEntity("code", 0, 23);
 		sendMessage.setEntities(Arrays.asList(messageEntity));
@@ -44,13 +52,16 @@ public class CommandHandler {
 			case ("/menu"):
 				sendMessage.setText("Astrophotography Helper\n\nMain Menu");
 				sendMessage.setReplyMarkup(mainMenuKeyboard.getMainMenuInlineKeyboard());
+				customMessageService.deleteMessage(chatId, receivedMessageId);
 				return sendMessage;
 			case ("/help"):
 				sendMessage.setText("Astrophotography Helper\n\nUse /menu to open Main Menu");
+				customMessageService.deleteMessage(chatId, receivedMessageId);
 				return sendMessage;
 			case ("/settings"):
 				sendMessage.setText("Astrophotography Helper\n\nSettings");
 				sendMessage.setReplyMarkup(settingsKeyboard.getSettingsInlineKeyboard());
+				customMessageService.deleteMessage(chatId, receivedMessageId);
 				return sendMessage;
 			case ("/location"):
 				if (locationService.isParsebleCoordinates(update.getMessage().getText())) {
