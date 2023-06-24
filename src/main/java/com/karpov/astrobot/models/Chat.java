@@ -25,6 +25,9 @@ public class Chat {
 	@NotNull
 	private long id;
 
+	@NotNull
+	private boolean blockedByUser;
+
 	private Instant timestamp;
 
 	@Enumerated(EnumType.STRING)
@@ -33,8 +36,9 @@ public class Chat {
 	private Double latitude;
 	private Double longitude;
 
-	public Chat(long id, Instant timestamp, BotState botState) {
+	public Chat(long id, boolean blockedByUser, Instant timestamp, BotState botState) {
 		this.id = id;
+		this.blockedByUser = blockedByUser;
 		this.timestamp = timestamp;
 		this.botState = botState;
 	}

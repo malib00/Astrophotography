@@ -18,4 +18,9 @@ public interface ChatRepository extends CrudRepository<Chat, Long> {
 	@Modifying
 	@Query("UPDATE Chat SET latitude = ?2, longitude = ?3 WHERE id = ?1")
 	void updateLongitudeAndLatitudeById(long chatId, Double latitude, Double longitude);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE Chat SET blockedByUser = ?2 WHERE id = ?1")
+	void updateBlockedByUserById(Long chatId, boolean blockedByUser);
 }

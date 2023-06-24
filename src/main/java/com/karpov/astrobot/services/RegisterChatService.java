@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.time.Instant;
+import java.util.Optional;
 
 @Service
 public class RegisterChatService {
@@ -19,8 +20,11 @@ public class RegisterChatService {
 
 	public void registerChat(Update update) {
 		long id = update.getMessage().getChatId();
-		if (!chatRepository.existsById(id)) {
-			chatRepository.save(new Chat(id, Instant.now(), BotState.MENU));
+		Optional<Chat> chatOptional = chatRepository.findById(id);
+		if (chatOptional.isEmpty()) {
+			chatRepository.save(new Chat(id, false, Instant.now(), BotState.MENU));
+		} else {
+			chatRepository.updateBlockedByUserById(id, false);
 		}
 	}
 }
