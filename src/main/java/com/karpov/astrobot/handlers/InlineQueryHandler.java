@@ -30,7 +30,7 @@ public class InlineQueryHandler {
 	private final LocationReplyKeyboard locationReplyKeyboard;
 	private final WeatherKeyboard weatherKeyboard;
 	private final WeatherForecastService weatherForecastService;
-	private final ChatRepository chatReposotory;
+	private final ChatRepository chatRepository;
 
 	public InlineQueryHandler(AuroraKeyboard auroraKeyboard,
 	                          MainMenuKeyboard mainMenuKeyboard,
@@ -45,7 +45,7 @@ public class InlineQueryHandler {
 		this.locationReplyKeyboard = locationReplyKeyboard;
 		this.weatherKeyboard = weatherKeyboard;
 		this.weatherForecastService = weatherForecastService;
-		this.chatReposotory = chatReposotory;
+		this.chatRepository = chatReposotory;
 	}
 
 	public BotApiMethod<?> handleInlineQuery(Update update) {
@@ -66,7 +66,7 @@ public class InlineQueryHandler {
 				editMessageText.setReplyMarkup(weatherKeyboard.getWeatherInlineKeyboard());
 				return editMessageText;
 			case ("CurrentWeatherButton"):
-				Chat chat = chatReposotory.findById(callbackQuery.getMessage().getChatId()).get();
+				Chat chat = chatRepository.findById(callbackQuery.getMessage().getChatId()).get();
 				Double latitude = chat.getLatitude();
 				Double longitude = chat.getLongitude();
 				if (latitude!= null && longitude!=null) {
@@ -97,7 +97,15 @@ public class InlineQueryHandler {
 				editMessageText.setReplyMarkup(settingsKeyboard.getSettingsInlineKeyboard());
 				return editMessageText;
 			case ("SetLocationButton"):
-				SendMessage sendMessage = new SendMessage(callbackQuery.getMessage().getChatId().toString(), "Set Location ... blabla (in decimals degrees");
+				String messageText = "2 options available to set location:\n\n" +
+						"1. Set location automatically by pushing the keyboard button (Set location automatically) at the bottom.\n\n" +
+						"2. Set location manually by typing coordinates (latitude and longitude) in decimals degrees after /location command.\n" +
+						"   Examples:\n" +
+						"   /location 27.380411,33.632224\n" +
+						"   or\n" +
+						"   /location 27.38,33.63\n" +
+						"   where 27.380411 - latitude, 33.632224 - longitude.";
+				SendMessage sendMessage = new SendMessage(callbackQuery.getMessage().getChatId().toString(), messageText);
 				sendMessage.setReplyMarkup(locationReplyKeyboard.getLocationReplyKeyboard());
 				return sendMessage;
 			default:

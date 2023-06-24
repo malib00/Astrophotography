@@ -16,7 +16,7 @@ public class LocationReplyKeyboard {
 		List<KeyboardRow> rowsInLine = new ArrayList<>();
 
 		KeyboardRow rowInLine1 = new KeyboardRow();
-		KeyboardButton keyboardButton = new KeyboardButton("Request Location");
+		KeyboardButton keyboardButton = new KeyboardButton("Set location automatically");
 		keyboardButton.setRequestLocation(true);
 		rowInLine1.add(keyboardButton);
 
