@@ -30,6 +30,11 @@ public class MainUpdateHandler {
 			chatRepository.updateBlockedByUserById (chatId, true);
 			log.info("User blocked chat: chatId={}", chatId);
 			return null;
+		} else if (update.hasMyChatMember() && update.getMyChatMember().getNewChatMember().getStatus().equals("member")) {
+			Long chatId = update.getMyChatMember().getChat().getId();
+			chatRepository.updateBlockedByUserById (chatId, true);
+			log.info("User unblocked chat: chatId={}", chatId);
+			return null;
 		} else {
 			log.warn("Unexpected behavior, can't handle an incoming update: {}", update);
 			return null;
