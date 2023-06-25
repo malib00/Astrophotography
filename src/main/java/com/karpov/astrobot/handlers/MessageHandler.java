@@ -20,9 +20,10 @@ public class MessageHandler {
 	}
 
 	public SendMessage handleMessage(Update update) {
+		Long chatId = update.getMessage().getChatId();
+		SendMessage sendMessage = new SendMessage();
+		sendMessage.setChatId(chatId);
 		if (update.getMessage().hasEntities()) {
-			SendMessage sendMessage = new SendMessage();
-			sendMessage.setChatId(update.getMessage().getChatId().toString());
 			sendMessage.setText("Got entities, but can't handle it ");
 			for (MessageEntity entity : update.getMessage().getEntities()
 			) {
@@ -32,20 +33,16 @@ public class MessageHandler {
 			}
 			return sendMessage;
 		} else if (update.getMessage().hasLocation()) {
-			Long chatId = update.getMessage().getChatId();
-
 			Location location = update.getMessage().getLocation();
 			Double latitude = location.getLatitude();
 			Double longitude = location.getLongitude();
 			chatRepository.updateLongitudeAndLatitudeById(chatId,latitude,longitude);
-
-			SendMessage sendMessage = new SendMessage();
-			sendMessage.setChatId(chatId);
 			sendMessage.setText("Location is successfully set. Latitude: " + latitude + ", Longitude: " + longitude + ".");
 			sendMessage.setReplyMarkup(new ReplyKeyboardRemove(true));
 			return sendMessage;
 		} else {
-			return new SendMessage(update.getMessage().getChatId().toString(), "Message is not recognized");
+			sendMessage.setText("Message is not recognized");
+			return sendMessage;
 		}
 	}
 }

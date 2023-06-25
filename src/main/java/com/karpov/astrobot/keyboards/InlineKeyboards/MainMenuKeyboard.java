@@ -17,19 +17,19 @@ public class MainMenuKeyboard {
 		List<InlineKeyboardButton> rowInLine1 = new ArrayList<>();
 		InlineKeyboardButton inlineKeyboardButtonWeather = new InlineKeyboardButton("Weather");
 		inlineKeyboardButtonWeather.setCallbackData("WeatherButton");
+		rowInLine1.add(inlineKeyboardButtonWeather);
 		InlineKeyboardButton inlineKeyboardButtonAurora = new InlineKeyboardButton("Aurora");
 		inlineKeyboardButtonAurora.setCallbackData("AuroraButton");
+		rowInLine1.add(inlineKeyboardButtonAurora);
 
 		List<InlineKeyboardButton> rowInLine2 = new ArrayList<>();
 		InlineKeyboardButton inlineKeyboardButtonSettings = new InlineKeyboardButton("Settings");
 		inlineKeyboardButtonSettings.setCallbackData("SettingsButton");
+		rowInLine2.add(inlineKeyboardButtonSettings);
 		InlineKeyboardButton inlineKeyboardButtonExitMenu = new InlineKeyboardButton("Exit");
 		inlineKeyboardButtonExitMenu.setCallbackData("ExitButton");
-
-		rowInLine1.add(inlineKeyboardButtonWeather);
-		rowInLine1.add(inlineKeyboardButtonAurora);
-		rowInLine2.add(inlineKeyboardButtonSettings);
 		rowInLine2.add(inlineKeyboardButtonExitMenu);
+
 		rowsInLine.add(rowInLine1);
 		rowsInLine.add(rowInLine2);
 		inlineKeyboardMarkup.setKeyboard(rowsInLine);

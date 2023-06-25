@@ -17,19 +17,19 @@ public class AuroraKeyboard {
 		List<InlineKeyboardButton> rowInLine1 = new ArrayList<>();
 		InlineKeyboardButton inlineKeyboardButtonWeather = new InlineKeyboardButton("3-day forecast");
 		inlineKeyboardButtonWeather.setCallbackData("3DayForecastButton");
+		rowInLine1.add(inlineKeyboardButtonWeather);
 		InlineKeyboardButton inlineKeyboardButtonAurora = new InlineKeyboardButton("27-day forecast");
 		inlineKeyboardButtonAurora.setCallbackData("27DayForecastButton");
+		rowInLine1.add(inlineKeyboardButtonAurora);
 
 		List<InlineKeyboardButton> rowInLine2 = new ArrayList<>();
 		InlineKeyboardButton inlineKeyboardButtonSettings = new InlineKeyboardButton("Back");
 		inlineKeyboardButtonSettings.setCallbackData("BackToMainMenuButton");
+		rowInLine2.add(inlineKeyboardButtonSettings);
 		InlineKeyboardButton inlineKeyboardButtonExitMenu = new InlineKeyboardButton("Exit");
 		inlineKeyboardButtonExitMenu.setCallbackData("ExitButton");
-
-		rowInLine1.add(inlineKeyboardButtonWeather);
-		rowInLine1.add(inlineKeyboardButtonAurora);
-		rowInLine2.add(inlineKeyboardButtonSettings);
 		rowInLine2.add(inlineKeyboardButtonExitMenu);
+
 		rowsInLine.add(rowInLine1);
 		rowsInLine.add(rowInLine2);
 		inlineKeyboardMarkup.setKeyboard(rowsInLine);

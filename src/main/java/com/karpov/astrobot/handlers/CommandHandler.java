@@ -2,17 +2,15 @@ package com.karpov.astrobot.handlers;
 
 import com.karpov.astrobot.keyboards.InlineKeyboards.MainMenuKeyboard;
 import com.karpov.astrobot.keyboards.InlineKeyboards.SettingsKeyboard;
-import com.karpov.astrobot.models.Location;
+import com.karpov.astrobot.models.ChatLocation;
+import com.karpov.astrobot.repo.ChatRepository;
 import com.karpov.astrobot.services.CustomMessageService;
 import com.karpov.astrobot.services.LocationService;
 import com.karpov.astrobot.services.RegisterChatService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
-
-import java.util.Arrays;
 
 @Component
 public class CommandHandler {
@@ -22,17 +20,19 @@ public class CommandHandler {
 	private final SettingsKeyboard settingsKeyboard;
 	private final LocationService locationService;
 	private final CustomMessageService customMessageService;
+	private final ChatRepository chatRepository;
 
 	public CommandHandler(RegisterChatService registerChatService,
 	                      MainMenuKeyboard mainMenuKeyboard,
 	                      SettingsKeyboard settingsKeyboard,
 	                      LocationService locationService,
-	                      CustomMessageService deleteMessageService) {
+	                      CustomMessageService deleteMessageService, ChatRepository chatRepository) {
 		this.registerChatService = registerChatService;
 		this.mainMenuKeyboard = mainMenuKeyboard;
 		this.settingsKeyboard = settingsKeyboard;
 		this.locationService = locationService;
 		this.customMessageService = deleteMessageService;
+		this.chatRepository = chatRepository;
 	}
 
 	public SendMessage handleCommand(Update update, String command) {
@@ -40,38 +40,38 @@ public class CommandHandler {
 		Long chatId = update.getMessage().getChatId();
 		Integer receivedMessageId = update.getMessage().getMessageId();
 		sendMessage.setChatId(chatId);
-		MessageEntity messageEntity = new MessageEntity("code", 0, 23);
-		sendMessage.setEntities(Arrays.asList(messageEntity));
+		sendMessage.setParseMode("HTML");
 
 		switch (command) {
 			case ("/start"):
 				registerChatService.registerChat(update);
-				sendMessage.setText("Astrophotography Helper\n\nMain Menu");
+				sendMessage.setText("<pre>Astrophotography Helper</pre>\n\nMain Menu");
 				sendMessage.setReplyMarkup(mainMenuKeyboard.getMainMenuInlineKeyboard());
 				return sendMessage;
 			case ("/menu"):
-				sendMessage.setText("Astrophotography Helper\n\nMain Menu");
+				sendMessage.setText("<pre>Astrophotography Helper</pre>\n\nMain Menu");
 				sendMessage.setReplyMarkup(mainMenuKeyboard.getMainMenuInlineKeyboard());
 				customMessageService.deleteMessage(chatId, receivedMessageId);
 				return sendMessage;
 			case ("/help"):
-				sendMessage.setText("Astrophotography Helper\n\nUse /menu to open Main Menu");
+				sendMessage.setText("<pre>Astrophotography Helper</pre>\n\nUse /menu to open Main Menu");
 				customMessageService.deleteMessage(chatId, receivedMessageId);
 				return sendMessage;
 			case ("/settings"):
-				sendMessage.setText("Astrophotography Helper\n\nSettings");
+				sendMessage.setText("<pre>Astrophotography Helper</pre>\n\nSettings");
 				sendMessage.setReplyMarkup(settingsKeyboard.getSettingsInlineKeyboard());
 				customMessageService.deleteMessage(chatId, receivedMessageId);
 				return sendMessage;
 			case ("/location"):
 				if (locationService.isParsebleCoordinates(update.getMessage().getText())) {
-					Location location = locationService.parseAndSetCoordinates(chatId, update.getMessage().getText());
+					ChatLocation location = locationService.parseCoordinates(update.getMessage().getText());
 					Double latitude = location.getLatitude();
 					Double longitude = location.getLongitude();
-					sendMessage.setText("Astrophotography Helper\n\nLocation is successfully set. Latitude: " + latitude + ", Longitude: " + longitude + ".");
+					chatRepository.updateLongitudeAndLatitudeById(chatId,latitude,longitude);
+					sendMessage.setText("<pre>Astrophotography Helper</pre>\n\nLocation is successfully set. Latitude: " + latitude + ", Longitude: " + longitude + ".");
 					sendMessage.setReplyMarkup(new ReplyKeyboardRemove(true));
 				} else {
-					sendMessage.setText("Astrophotography Helper\n\nLocation is not recognized.");
+					sendMessage.setText("<pre>Astrophotography Helper</pre>\n\nLocation is not recognized. Please try again.");
 				}
 				return sendMessage;
 			default:

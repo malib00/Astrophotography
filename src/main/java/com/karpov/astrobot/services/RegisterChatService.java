@@ -22,7 +22,7 @@ public class RegisterChatService {
 		long id = update.getMessage().getChatId();
 		Optional<Chat> chatOptional = chatRepository.findById(id);
 		if (chatOptional.isEmpty()) {
-			chatRepository.save(new Chat(id, false, Instant.now(), BotState.MENU));
+			chatRepository.save(new Chat(id, false, Instant.now(), BotState.MAIN_MENU));
 		} else {
 			chatRepository.updateBlockedByUserById(id, false);
 		}
