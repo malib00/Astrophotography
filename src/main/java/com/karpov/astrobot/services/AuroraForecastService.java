@@ -1,5 +1,6 @@
 package com.karpov.astrobot.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -7,6 +8,7 @@ import java.net.URL;
 import java.util.Scanner;
 
 @Service
+@Slf4j
 public class AuroraForecastService {
 
 	public String get3DayAuroraForecast() {
@@ -21,8 +23,8 @@ public class AuroraForecastService {
 			stringBuilder.append("</pre>");
 			scanner.close();
 			return stringBuilder.toString();
-		} catch (IOException ex) {
-			ex.printStackTrace();
+		} catch (IOException e) {
+			log.error("Error getting 3DayAuroraForecast", e);
 			return "Service unavailable";
 		}
 	}
@@ -39,8 +41,8 @@ public class AuroraForecastService {
 			stringBuilder.append("</pre>");
 			scanner.close();
 			return stringBuilder.toString();
-		} catch (IOException ex) {
-			ex.printStackTrace();
+		} catch (IOException e) {
+			log.error("Error getting 27DayAuroraForecast", e);
 			return "Service unavailable";
 		}
 	}

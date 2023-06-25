@@ -9,6 +9,7 @@ import com.karpov.astrobot.models.Chat;
 import com.karpov.astrobot.repo.ChatRepository;
 import com.karpov.astrobot.services.AuroraForecastService;
 import com.karpov.astrobot.services.WeatherForecastService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -20,6 +21,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.util.Optional;
 
 @Component
+@Slf4j
 public class InlineQueryHandler {
 
 	private final AuroraKeyboard auroraKeyboard;
@@ -52,30 +54,33 @@ public class InlineQueryHandler {
 		String callbackQueryData = callbackQuery.getData();
 
 		EditMessageText editMessageText = new EditMessageText();
-		editMessageText.setChatId(callbackQuery.getMessage().getChatId());
-		editMessageText.setMessageId(callbackQuery.getMessage().getMessageId());
+		Long chatId = callbackQuery.getMessage().getChatId();
+		editMessageText.setChatId(chatId);
+		Integer messageId = callbackQuery.getMessage().getMessageId();
+		editMessageText.setMessageId(messageId);
 		editMessageText.setParseMode("HTML");
 
 		switch (callbackQueryData) {
 			case ("ExitButton"):
-				return new DeleteMessage(callbackQuery.getFrom().getId().toString(), callbackQuery.getMessage().getMessageId());
+				return new DeleteMessage(callbackQuery.getFrom().getId().toString(), messageId);
 			case ("WeatherButton"):
 				editMessageText.setText("<pre>Astrophotography Helper</pre>\n\nWeather Forecast");
 				editMessageText.setReplyMarkup(weatherKeyboard.getWeatherInlineKeyboard());
 				return editMessageText;
 			case ("CurrentWeatherButton"):
-				Optional<Chat> chatOptional = chatRepository.findById(callbackQuery.getMessage().getChatId());
+				Optional<Chat> chatOptional = chatRepository.findById(chatId);
 				if (chatOptional.isPresent()) {
 					Chat chat = chatOptional.get();
 					Double latitude = chat.getLatitude();
 					Double longitude = chat.getLongitude();
 					if (latitude!= null && longitude!=null) {
-						editMessageText.setText("<pre>Astrophotography Helper</pre>\n\n" + weatherForecastService.getCurrentWeatherText(latitude,longitude));
+						editMessageText.setText("<pre>Astrophotography Helper</pre>\n\n" + weatherForecastService.getCurrentWeather(latitude,longitude));
 					} else {
 						editMessageText.setText("<pre>Astrophotography Helper</pre>\n\nPlease set location in Settings");
 					}
 				} else {
 					editMessageText.setText("<pre>Astrophotography Helper</pre>\n\nPlease register bot by sending /start command");
+					log.warn("Access to CurrentWeatherButton bypassing initial /start command: chatId={}", chatId);
 				}
 				editMessageText.setReplyMarkup(weatherKeyboard.getWeatherInlineKeyboard());
 				return editMessageText;
@@ -107,12 +112,13 @@ public class InlineQueryHandler {
 						"/location 27.38,33.63\n" +
 						"/location 27.380411,33.632224\n" +
 						"where 27.380411 - latitude, 33.632224 - longitude.</i>";
-				SendMessage sendMessage = new SendMessage(callbackQuery.getMessage().getChatId().toString(), messageText);
+				SendMessage sendMessage = new SendMessage(chatId.toString(), messageText);
 				sendMessage.setParseMode("HTML");
 				sendMessage.setReplyMarkup(locationReplyKeyboard.getLocationReplyKeyboard());
 				return sendMessage;
 			default:
-				return new SendMessage(update.getCallbackQuery().getFrom().getId().toString(), "Update has query, but not implemented");
+				log.warn("Update has an unrecognized callbackQuery: chatId={}, update={}", chatId, update);
+				return new SendMessage(chatId.toString(), "Message is not recognized");
 		}
 	}
 }

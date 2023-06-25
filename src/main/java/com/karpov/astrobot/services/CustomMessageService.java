@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.karpov.astrobot.config.BotConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.media.InputMediaPhoto;
 import java.util.Set;
 
 @Service
+@Slf4j
 public class CustomMessageService {
 
 	private final RestTemplate restTemplate;
@@ -33,11 +35,11 @@ public class CustomMessageService {
 					chatId,
 					messageId);
 		} catch (HttpClientErrorException e) {
-			e.printStackTrace();
+			log.error("Error deleting message: chatId={}, messageId={}", chatId, messageId, e);
 		}
 	}
 
-	public HttpStatusCode sendPhotoFromHTTP(String chatId, String http) {
+	public HttpStatusCode sendPhotoFromHttp(String chatId, String http) {
 		try {
 			ResponseEntity<Message> responseEntity = restTemplate.getForEntity("https://api.telegram.org/bot{botToken}/sendPhoto?chat_id={chatId}&photo={photoLink}",
 					Message.class,
@@ -46,7 +48,7 @@ public class CustomMessageService {
 					http);
 			return responseEntity.getStatusCode();
 		} catch (HttpClientErrorException e) {
-			e.printStackTrace();
+			log.error("Error while sending photo with url provided by user: chatId={}, url={}", chatId, http, e);
 			return e.getStatusCode();
 		}
 
@@ -67,7 +69,7 @@ public class CustomMessageService {
 					json);
 			return responseEntity.getStatusCode();
 		} catch (HttpClientErrorException | JsonProcessingException e) {
-			e.printStackTrace();
+			log.error("Error while sending photo with url provided by user: chatId={}, urls={}", chatId, set.toString(), e);
 			return HttpStatusCode.valueOf(404);
 		}
 	}

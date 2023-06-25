@@ -1,12 +1,13 @@
 package com.karpov.astrobot.handlers;
 
 import com.karpov.astrobot.repo.ChatRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Component
+@Slf4j
 public class MainUpdateHandler {
 
 	private final InlineQueryHandler inlineQueryHandler;
@@ -25,10 +26,13 @@ public class MainUpdateHandler {
 		} else if (update.hasMessage()) {
 			return messageHandler.handleMessage(update);
 		} else if (update.hasMyChatMember() && update.getMyChatMember().getNewChatMember().getStatus().equals("kicked")) {
-			chatRepository.updateBlockedByUserById (update.getMyChatMember().getChat().getId(), true);
-			return new SendMessage();
+			Long chatId = update.getMyChatMember().getChat().getId();
+			chatRepository.updateBlockedByUserById (chatId, true);
+			log.info("User blocked chat: chatId={}", chatId);
+			return null;
 		} else {
-			return new SendMessage();
+			log.warn("Unexpected behavior, can't handle an incoming update: {}", update);
+			return null;
 		}
 	}
 }
