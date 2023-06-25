@@ -32,7 +32,7 @@ public class MainUpdateHandler {
 			return null;
 		} else if (update.hasMyChatMember() && update.getMyChatMember().getNewChatMember().getStatus().equals("member")) {
 			Long chatId = update.getMyChatMember().getChat().getId();
-			chatRepository.updateBlockedByUserById (chatId, true);
+			chatRepository.updateBlockedByUserById (chatId, false);
 			log.info("User unblocked chat: chatId={}", chatId);
 			return null;
 		} else {
