@@ -36,15 +36,15 @@ public class WeatherForecastService {
 				CurrentWeather currentWeather = response.getBody();
 				Location location = currentWeather.getLocation();
 				Current current = currentWeather.getCurrent();
-				String currentWeatherFormattedText = "Current Weather in " + location.getName() + ".\n\n" +
-						"Cloud cover: " + current.getCloud() + "%" + ".\n" +
-						"t = " + Math.round(current.getTemp_c()) + "°C, feels like = " + current.getFeelslike_c() + "°C.\n" +
-						"Wind = " + (float) Math.round(current.getWind_kph() / 3.6 * 10) / 10 + "m/s. Wind gust = " +
-						(float) Math.round(current.getGust_kph() / 3.6 * 10) / 10 + "m/s.\n" +
-						"Wind direction = " + current.getWind_dir() + " (" +
-						current.getWind_degree() + "°).\n" +
-						"Humidity = " + current.getHumidity() + "%.\n";
-				return currentWeatherFormattedText;
+				StringBuilder currentWeatherFormattedText = new StringBuilder();
+				currentWeatherFormattedText.append("Current Weather in ").append(location.getName()).append(".\n\n")
+						.append("Cloud cover: ").append(current.getCloud()).append("%.\n")
+						.append("t = ").append(Math.round(current.getTemp_c())).append("°C, feels like = ").append(current.getFeelslike_c()).append("°C.\n")
+						.append("Wind = ").append((float) Math.round(current.getWind_kph() / 3.6 * 10) / 10).append("m/s. Wind gust = ")
+						.append((float) Math.round(current.getGust_kph() / 3.6 * 10) / 10).append("m/s.\n")
+						.append("Wind direction = ").append(current.getWind_dir()).append(" (").append(current.getWind_degree()).append("°).\n")
+						.append("Humidity = ").append(current.getHumidity()).append("%.\n");
+				return currentWeatherFormattedText.toString();
 			} catch (NullPointerException e) {
 				log.error("WeatherAPI: Error during parsing CurrentWeather in  received response: response={}", response, e);
 				return "Service unavailable.";
